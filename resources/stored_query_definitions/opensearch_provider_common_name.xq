@@ -21,7 +21,7 @@ let $search_name := "48095e0e-7760-46bc-8798-c4fa857a878c"
 
 
 (:Get the search terms passed in the request :)
-let $search_terms := $careServicesRequest/os:searchTerms/text()
+let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
 (:Find the matching providers -- to be customized for your search:)
 let $matched_providers :=  
   for $provider in /csd:CSD/csd:providerDirectory/csd:provider
@@ -68,6 +68,7 @@ let $html_func := function($provider,$doc_name,$search_name)
 	 {$demo/csd:name[1]/csd:surname/text()}, {$demo/csd:name[1]/csd:forename/text()}
        </html:a>
        <html:div class='description'>{osf:get_provider_desc($provider,$doc_name)}</html:div>
+       <html:div class='description_html'>{osf:get_provider_desc_html($provider,$doc_name)}</html:div>
      </html:li>
      
 }

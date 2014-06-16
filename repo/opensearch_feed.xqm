@@ -167,7 +167,19 @@ declare function osf:create_feed_from_entities($matched_entities,$careServicesRe
         <html:meta name="itemsPerPage" content="{$count}"/>
       </html:head>
       <html:body>
-        <html:ul>{$items}</html:ul>
+        <html:h1>{$title}</html:h1>
+	<html:div class='search_box' id = '{$doc_name}'>
+	  <html:img src='http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png'/>
+	  <html:form class='seach_form' action='{concat(osf:get_base_url($search_name,$careServicesRequest/searchURL),'/' , $careServicesRequest/resource ,'/search' )}'>
+	    <html:label for='{$doc_name}:{$search_name}'>Search Again</html:label> 
+	    <html:input type='text' id='{$doc_name}:{$search_name}' name='searchTerms'/>
+	    <html:input type='submit'>Go</html:input>
+	  </html:form>
+	</html:div>
+        <html:div class='search_results' id='{$doc_name}'>
+	  <html:h1>Search Results</html:h1>
+	  <html:ul>{$items}</html:ul>
+	</html:div>
       </html:body>
     </html:html>
 };
@@ -277,5 +289,83 @@ declare function osf:get_provider_desc($provider,$doc_name) {
    )
 };
 
+
+
+
+
+declare function osf:get_provider_desc_html($provider,$doc_name) {
+   let $csd_doc := csd_dm:open_document($csd_webconf:db,$doc_name) 
+   let $demo:= $provider/csd:demographic[1]
+   let $addresses :=$demo/csd:address
+   let $names := 
+     (
+       for $name in  $demo/csd:name
+         return functx:trim(concat($name/csd:surname/text(), ", " ,$name/csd:forename/text() ))
+       ,for $common_name in $demo/csd:name/csd:commonName
+         return functx:trim($common_name/text() )
+      )
+   let $unique_names :=  distinct-values($names)
+   return
+   <html:div class='results_html' id='{$doc_name}'>
+    <html:div class='demographic'>
+      <html:h3>Health Worker</html:h3>
+	 {
+         if (count($unique_names) > 0 ) then 
+	  <html:ul>
+	    {
+            for $name in $unique_names 
+	    return  <html:li>{$name}</html:li>  
+	    }
+	  </html:ul> 
+	else ()
+	  }
+     </html:div>
+     <html:div class='addresses'>
+       <html:h3>Addresses</html:h3>
+       {
+	 if (count($addresses)> 0) then 
+	   <html:ul> 
+	     {
+             for $address in $addresses
+	     return
+	       <html:li class='address'>
+	         Address ( {string($address/@type) } ) 
+		 <html:ul> 
+		   { 
+		   for $line in $address/csd:addressLine return <li>{$line/text()}</li> 
+		   }
+		 </html:ul>
+	       </html:li>
+	      }
+          </html:ul>
+         else ()
+  	}
+     </html:div>
+     <html:div class='business_contact'>
+       <html:h3>Business Contact</html:h3>
+       {
+	 let $bp:= $demo/csd:contactPoint/csd:codedType[@code="BP"and @codingSchema="urn:ihe:iti:csd:2013:contactPoint"]
+	 return if ($bp) then concat("Business Phone: " , $bp/text() , ".") else ()
+       }
+     </html:div>
+     <html:div class='duty_post'>
+       <html:h3>Duty Posts</html:h3>
+       <html:ul>
+        {for $fac in $provider/csd:facility
+	 return  
+	  <li>
+	    Duty Post: 
+	    { 
+	      $csd_doc/csd:facilityDirectory/csd:facility[@oid = $fac/@oid]/csd:primaryName/text() 
+	    } 
+	  </li>
+	}
+       </html:ul>
+     </html:div>
+     <html:div class='source'>
+       <h4>Data Source</h4>{string($doc_name)}
+     </html:div>
+   </html:div>
+};
 
 

@@ -46,10 +46,7 @@
     <os:Contact>email@example.org</os:Contact> <!-- customize with your email contact -->
     <os:LongName>CSD Provider Search by Common Name</os:LongName> <!--customize with the name of this search to identify your organization -->
     <os:email_contact>email@example.org</os:email_contact> <!-- customize with your email contact -->
-<!--
-    <os:Image height="64" width="64" type="image/png">http://example.com/websearch.png</os:Image> 
-    <os:Image height="16" width="16" type="image/vnd.microsoft.icon">http://example.com/websearch.ico</os:Image> 
--->
+    <os:Image height="64" width="64" type="image/png">http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png</os:Image> 
     <os:Query role="example" searchTerms="Constance Peterson" />
     <os:Developer>OpenInfoMan Developement Team</os:Developer> <!-- customize with your email contact -->
     <os:Attribution>Search data Copyright 2014, OpenInfoManTeam., All Rights Reserved</os:Attribution>

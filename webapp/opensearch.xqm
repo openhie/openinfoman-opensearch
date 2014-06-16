@@ -59,7 +59,7 @@ declare
     let $auto_links := 
       for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
       return 
-        for $search_func in csr_proc:stored_functions($csd_webconf:db)
+        for $search_func in csr_proc:stored_functions($csd_webconf:db)[@uuid = $search_name]
 	let $slink:= concat($csd_webconf:baseurl , "CSD/opensearch/" , $search_func/@uuid, "/" , $doc_name)
         let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:opensearch_feed']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)

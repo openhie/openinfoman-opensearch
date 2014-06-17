@@ -38,11 +38,11 @@ declare function osf:get_description($search_name,$doc_name) {
   let $url_template := concat(osf:get_base_url($search_name),"/", $doc_name, "/search?searchTerms={searchTerms}&amp;startPage={startPage?}&amp;startIndex={startIndex?}&amp;count={count?}")
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
   let $function_desc := $function/csd:extension[@type='description' and @urn='urn:openhie.org:openinfoman:opensearch_feed']
-
+  let $short_name :=  <os:ShortName>{$function_desc/os:ShortName/text()} on {$doc_name}</os:ShortName>
   let $description :=
   <os:OpenSearchDescription >
    {(
-     $function_desc/os:ShortName,
+     $short_name,
      $function_desc/os:Description,
      $function_desc/os:Tags,
      $function_desc/os:Contact

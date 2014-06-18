@@ -83,9 +83,12 @@ declare function osf:get_feed($doc_name,$care_services_request)
 
 
 
+declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$search_name,$rss_func,$atom_func,$html_func) {
+  let $html_wrap_func := function($meta,$content) { osf:wrapper_search_results($meta,$content)}
+  return osf:create_feed_from_entities($matched_entities,$careServicesRequest,$search_name,$rss_func,$atom_func,$html_func,$html_wrap_func) 
+};
 
-
-declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$search_name,$rss_func,$atom_func,$html_func)  
+declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$search_name,$rss_func,$atom_func,$html_func,$html_wrap_func)  
 {
 
   let $doc_name := $careServicesRequest/resource
@@ -154,35 +157,80 @@ declare function osf:create_feed_from_entities($matched_entities,$careServicesRe
 	,$items
       )} 
     </atom:feed>
-  else 
-    <html:html xml:lang="en" lang="en">
-      <html:head profile="http://a9.com/-/spec/opensearch/1.1/" >
-        <html:title>{$title}></html:title>
-        <html:link rel="search"
-          type="application/opensearchdescription+xml" 
-          href="{osf:get_base_url($search_name,$careServicesRequest/searchURL)}"
-          title="{$title}" />
-        <html:meta name="totalResults" content="{$total}"/>
-        <html:meta name="startIndex" content="{$start_index}"/>
-        <html:meta name="itemsPerPage" content="{$count}"/>
-      </html:head>
-      <html:body>
+  else   (: Default to 'html' :)
+      let $content :=
+	(
         <html:h1>{$title}</html:h1>
-	<html:div class='search_box' id = '{$doc_name}'>
-	  <html:img src='http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png'/>
+	,<html:div class='search_box' id = '{$doc_name}'>
 	  <html:form class='seach_form' action='{concat(osf:get_base_url($search_name,$careServicesRequest/searchURL),'/' , $careServicesRequest/resource ,'/search' )}'>
 	    <html:label for='{$doc_name}:{$search_name}'>Search Again</html:label> 
 	    <html:input type='text' id='{$doc_name}:{$search_name}' name='searchTerms'/>
 	    <html:input type='submit'>Go</html:input>
 	  </html:form>
 	</html:div>
-        <html:div class='search_results' id='{$doc_name}'>
+        ,<html:div class='search_results' id='{$doc_name}'>
 	  <html:h1>Search Results</html:h1>
 	  <html:ul>{$items}</html:ul>
 	</html:div>
-      </html:body>
-    </html:html>
+	)
+
+     let $meta:= (
+        <html:title>{$title}></html:title>
+        ,<html:link rel="search"
+          type="application/opensearchdescription+xml" 
+          href="{osf:get_base_url($search_name,$careServicesRequest/searchURL)}"
+          title="{$title}" />
+        ,<html:meta name="totalResults" content="{$total}"/>
+        ,<html:meta name="startIndex" content="{$start_index}"/>
+        ,<html:meta name="itemsPerPage" content="{$count}"/>
+	 ) 
+
+     return $html_wrap_func($meta,$content)
+
 };
+
+
+
+
+declare function osf:wrapper_search_results($meta,$content) {
+<html:html xml:lang="en" lang="en">
+   <html:head profile="http://a9.com/-/spec/opensearch/1.1/" >    
+
+    <html:link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <html:link href="/static/bootstrap/css/bootstrap-theme.css" rel="stylesheet"/>
+    
+    <html:script src="https://code.jquery.com/jquery.js"/>
+    <script src="/static/bootstrap/js/bootstrap.min.js"/>
+
+    <html:script src="https://code.jquery.com/jquery.js"/>
+    <html:script src="/static/bootstrap/js/bootstrap.min.js"/>
+    {$meta}
+  </html:head>
+  <html:body>  
+    <html:div class="navbar navbar-inverse navbar-static-top">
+      <html:div class="container">
+        <html:div class="navbar-header">
+	  <html:img class='pull-left' height='38px' src='http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png'/>
+          <html:button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <html:span class="icon-bar"></html:span>
+            <html:span class="icon-bar"></html:span>
+            <html:span class="icon-bar"></html:span>
+          </html:button>
+          <html:a class="navbar-brand" href="/CSD">OpenInfoMan</html:a>
+        </html:div>
+      </html:div>
+    </html:div>
+    <html:div class='wrapper_search'>
+      <html:div class="container">
+	{$content}
+      </html:div>
+    </html:div>
+  </html:body>
+ </html:html>
+};
+
+
+
 
 declare function osf:limit_matches($nodes as node()*, $careServicesRequest) as node()*
 {

@@ -25,7 +25,8 @@ let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
 (:Find the matching providers -- to be customized for your search:)
 let $matched_providers :=  
   for $provider in /csd:CSD/csd:providerDirectory/csd:provider
-  where  functx:contains-case-insensitive($provider/csd:demographic/csd:name/csd:commonName,  $search_terms)  
+  let $common_name := $provider/csd:demographic/csd:name/csd:commonName
+  where  exists($search_terms) and exists($common_name) and functx:contains-case-insensitive($common_name,  $search_terms)  
   return $provider  
 
 

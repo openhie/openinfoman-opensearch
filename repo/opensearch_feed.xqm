@@ -399,14 +399,14 @@ declare function osf:get_provider_desc_html($provider,$doc_name) {
      <html:div class='duty_post'>
        <html:h3>Duty Posts</html:h3>
        <html:ul>
-        {for $fac in $provider/csd:facility
+        {for $fac in $provider/csd:facilities/csd:facility
 	 return  
-	  <li>
+	  <html:li>
 	    Duty Post: 
 	    { 
 	      $csd_doc/csd:facilityDirectory/csd:facility[@oid = $fac/@oid]/csd:primaryName/text() 
 	    } 
-	  </li>
+	  </html:li>
 	}
        </html:ul>
      </html:div>

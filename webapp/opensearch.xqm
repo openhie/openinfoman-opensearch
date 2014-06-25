@@ -1,10 +1,11 @@
 module namespace page = 'http://basex.org/modules/web-page';
 
 (:Import other namespaces.  :)
-import module namespace csd_webconf =  "https://github.com/his-interop/openinfoman/csd_webconf" at "../repo/csd_webapp_config.xqm";
-import module namespace osf = "https://github.com/his-interop/openinfoman/opensearch_feed" at "../repo/opensearch_feed.xqm";
-import module namespace csr_proc = "https://github.com/his-interop/openinfoman/csr_proc" at "../repo/csr_processor.xqm";
-import module namespace csd_dm = "https://github.com/his-interop/openinfoman/csd_dm" at "../repo/csd_document_manager.xqm";
+import module namespace csd_webconf =  "https://github.com/his-interop/openinfoman/csd_webconf";
+import module namespace osf = "https://github.com/his-interop/openinfoman/opensearch_feed";
+import module namespace csr_proc = "https://github.com/his-interop/openinfoman/csr_proc";
+(:import module namespace csr_adpt = "https://github.com/his-interop/openinfoman/csr_adapter"; :)
+import module namespace csd_dm = "https://github.com/his-interop/openinfoman/csd_dm";
 declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 declare namespace   xforms = "http://www.w3.org/2002/xforms";
@@ -13,33 +14,10 @@ declare namespace os =  "http://a9.com/-/spec/opensearch/1.1/";
 
 
 
-(:Supposed to be linked into header of a web-page, such as the OpenHIE Health Worker Registry Management Interface :)
-declare
-  %rest:path("/CSD/opensearch")
-  %rest:GET
-  %output:method("xhtml")
-  function page:show_searches() 
-{ 
-  let $searches := 
-    <ul>
-      {
-	for $search_func in csr_proc:stored_functions($csd_webconf:db)
-        let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:opensearch_feed']/os:ShortName
-	where osf:is_search_function($search_func/@uuid)
-	return
-  	<li>
-	   <a href="{$csd_webconf:baseurl}/CSD/opensearch/{$search_func/@uuid}">{string($search_func/@uuid)}</a>: {$short_name}
-	</li>
-      }
-    </ul>
-  return page:wrapper($searches,())
-};
-
-
 
 (:Supposed to be linked into header of a web-page, such as the OpenHIE Health Worker Registry Management Interface :)
 declare
-  %rest:path("/CSD/opensearch/{$search_name}")
+  %rest:path("/CSD/adapter/opensearch/{$search_name}")
   %rest:GET
   %output:method("xhtml")
   function page:show_searches_on_docs($search_name) 
@@ -51,7 +29,7 @@ declare
   	  for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
 	  return
   	  <li>
-	    <a href="{$csd_webconf:baseurl}/CSD/opensearch/{$search_name}/{$doc_name}">{string($doc_name)}</a>
+	    <a href="{$csd_webconf:baseurl}/CSD/adapter/opensearch/{$search_name}/{$doc_name}">{string($doc_name)}</a>
 	  </li>
 	}
       </ul>
@@ -60,7 +38,7 @@ declare
       for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
       return 
         for $search_func in csr_proc:stored_functions($csd_webconf:db)[@uuid = $search_name]
-	let $slink:= concat($csd_webconf:baseurl , "CSD/opensearch/" , $search_func/@uuid, "/" , $doc_name)
+	let $slink:= concat($csd_webconf:baseurl , "CSD/adapter/opensearch/" , $search_func/@uuid, "/" , $doc_name)
         let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:opensearch_feed']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)
 	where osf:is_search_function($search_func/@uuid)
@@ -75,12 +53,15 @@ declare
 
 
 
+
+
+
 (:
 Each OpenSearch upposed to be linked into header of a web-page, such as the OpenHIE Health Worker Registry Management Interface 
 http://blog.unto.net/add-opensearch-to-your-site-in-five-minutes.html
 :)
 declare
-  %rest:path("/CSD/opensearch/{$search_name}/{$doc_name}")
+  %rest:path("/CSD/adapter/opensearch/{$search_name}/{$doc_name}") 
   %output:media-type("text/xml")
   function page:get_description($search_name,$doc_name) 
 {  
@@ -103,7 +84,7 @@ declare
 :)
     return ($response, $description) 
   else 
-    <http:response status="404" message="No OpenSearch  function with registered with at '{$search_name}'.">
+    <http:response status="404" message="No OpenSearch  function with registered with uuid  '{$search_name}'.">
       <http:header name="Content-Language" value="en"/>
       <http:header name="Content-Type" value="text/html; charset=utf-8"/>
     </http:response>    
@@ -111,7 +92,7 @@ declare
 
 
 declare
-  %rest:path("/CSD/opensearch/{$search_name}/{$doc_name}/search")
+  %rest:path("/CSD/adapter/opensearch/{$search_name}/{$doc_name}/search") 
   %rest:query-param("searchTerms", "{$searchTerms}",'')  
   %rest:query-param("startPage", "{$startPage}",1)  
   %rest:query-param("startIndex", "{$startIndex}",1)  
@@ -133,13 +114,18 @@ declare
 	    <os:itemsPerPage>{$count}</os:itemsPerPage>
 	    <type>{$type}</type>
 	    <format>{$format}</format>
-	    <resource>{$doc_name}</resource>
-	    <searchURL>{$csd_webconf:baseurl}</searchURL>
 	  </requestParams>
 	</csd:function>
       </csd:careServicesRequest>
-    return osf:get_feed($doc_name,$care_services_request)
-
+     let $results := csr_proc:process_CSR(
+       $csd_webconf:db,
+       $care_services_request,
+       csd_dm:open_document($csd_webconf:db,$doc_name),
+       map { 'doc_name':=$doc_name, 'base_url':= $csd_webconf:baseurl}
+      )   
+(:     return osf:get_feed($doc_name,$care_services_request) :)
+     return $results
+(:    return csr_adpt:get_results($doc_name,$care_services_request,$wrapper) :) 
 (:
       <rest:response>
 	<http:response status="200" message="OK">
@@ -155,7 +141,7 @@ declare
       </rest:response>
 :)
   else  
-    <http:response status="404" message="No OpenSearch  function with registered with at '{$search_name}'.">
+    <http:response status="404" message="No OpenSearch  function with registered with '{$search_name}'.">
       <http:header name="Content-Language" value="en"/>
       <http:header name="Content-Type" value="text/html; charset=utf-8"/>
     </http:response>

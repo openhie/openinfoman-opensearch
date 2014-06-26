@@ -21,10 +21,14 @@ declare variable $careServicesRequest as item() external;
 (:Get the search terms passed in the request :)
 let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
 (:Find the matching providers -- to be customized for your search:)
+let $filter:= function($common_name) {
+  functx:contains-case-insensitive($common_name,  $search_terms)  
+}
 let $matched_providers :=  
-  for $provider in /csd:CSD/csd:providerDirectory/csd:provider
-  let $common_name := $provider/csd:demographic/csd:name/csd:commonName
-  where  exists($search_terms) and exists($common_name) and functx:contains-case-insensitive($common_name,  $search_terms)  
+  if ($search_terms) then
+    for $provider in /csd:CSD/csd:providerDirectory/csd:provider
+    let $common_names := $provider/csd:demographic/csd:name/csd:commonName
+    where  count(filter($common_names,$filter)) > 0
   return $provider  
 
 

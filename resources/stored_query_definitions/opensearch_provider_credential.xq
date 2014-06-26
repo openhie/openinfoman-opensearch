@@ -7,9 +7,6 @@ declare namespace atom = "http://www.w3.org/2005/Atom";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace os  = "http://a9.com/-/spec/opensearch/1.1/";
 declare variable $careServicesRequest as item() external;
-declare variable $base_url  external;
-declare variable $doc_name  external;
-
 
 
 (: 
@@ -17,11 +14,6 @@ declare variable $doc_name  external;
    The dynamic context of this query has $careServicesRequest set to contain any of the search 
    and limit paramaters as sent by the Service Finder
 :) 
-
-(:Should match the UUID assigned to the care services function .xml document.
-  Allows access to meta-data stored in careServicesFunction extension  :)
-let $search_name := "546e4b60-a9a1-48b7-acd0-49455f8b48e0" 
-
 
 (:Get the search terms passed in the request :)
 let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
@@ -65,7 +57,7 @@ let $processors := map{
 
 
 (:Produce the feed in the neccesary format :)
-return osf:create_feed_from_entities($matched_providers,$careServicesRequest,$base_url,$search_name,$doc_name,$processors)
+return osf:create_feed_from_entities($matched_providers,$careServicesRequest,$processors)
 
 
 

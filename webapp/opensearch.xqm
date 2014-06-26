@@ -120,8 +120,8 @@ declare
      let $results := csr_proc:process_CSR(
        $csd_webconf:db,
        $care_services_request,
-       csd_dm:open_document($csd_webconf:db,$doc_name),
-       map { 'doc_name':=$doc_name, 'base_url':= $csd_webconf:baseurl}
+       $doc_name,
+       $csd_webconf:baseurl
       )   
 (:     return osf:get_feed($doc_name,$care_services_request) :)
      return $results

@@ -70,25 +70,28 @@ declare function osf:get_description($search_name,$doc_name) {
 
 
 
-declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name) {
-  osf:create_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,map:new(()))
+declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest) {
+  osf:create_feed_from_entities($matched_entities,$careServicesRequest,map:new(()))
 };
 
-declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors as map(xs:string, function(*))) 
+declare function osf:create_feed_from_entities($matched_entities,$careServicesRequest,$processors as map(xs:string, function(*))) 
 {
   let $format:= $careServicesRequest/format/text()
   return 
     if ($format = 'rss') then 
-      osf:create_rss_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors)
+      osf:create_rss_feed_from_entities($matched_entities,$careServicesRequest,$processors)
     else if ($format = 'atom') then 
-      osf:create_atom_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors)
+      osf:create_atom_feed_from_entities($matched_entities,$careServicesRequest,$processors)
     else
-      osf:create_html_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors)
+      osf:create_html_feed_from_entities($matched_entities,$careServicesRequest,$processors)
 };
 
 
-declare function osf:create_rss_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors as map(xs:string, function(*))) 
+declare function osf:create_rss_feed_from_entities($matched_entities,$careServicesRequest,$processors as map(xs:string, function(*))) 
 {
+  let $search_name := string($careServicesRequest/@function)
+  let $doc_name := string($careServicesRequest/@resource)
+  let $base_url := string($careServicesRequest/@base_url)
   let $entities := osf:limit_matches($matched_entities,$careServicesRequest)
   let $func := 
       if (map:contains($processors,'rss')) then map:get($processors,'rss')
@@ -140,8 +143,11 @@ declare function osf:create_rss_feed_from_entities($matched_entities,$careServic
      </rss:rss>
 };
 
-declare function osf:create_atom_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors as map(xs:string, function(*))) 
+declare function osf:create_atom_feed_from_entities($matched_entities,$careServicesRequest,$processors as map(xs:string, function(*))) 
 {
+  let $search_name := string($careServicesRequest/@function)
+  let $doc_name := string($careServicesRequest/@resource)
+  let $base_url := string($careServicesRequest/@base_url)
 
   let $entities := osf:limit_matches($matched_entities,$careServicesRequest)
   let $func := 
@@ -183,15 +189,19 @@ declare function osf:create_atom_feed_from_entities($matched_entities,$careServi
       {(
 	$os_query
         ,for $rel in ('self','first','previous','next','last','search') 
-         let $atom_link := osf:get_atom_search_link($search_name,$careServicesRequest,$rel,$total,$base_url)
+         let $atom_link := osf:get_atom_search_link($careServicesRequest,$rel,$total)
          return <atom:link rel="{$rel}" href="{$atom_link}" type="application/atom+xml"/>
 	,$items
       )} 
     </atom:feed>
 };
 
-declare function osf:create_html_feed_from_entities($matched_entities,$careServicesRequest,$base_url,$search_name,$doc_name,$processors as map(xs:string, function(*))) 
+declare function osf:create_html_feed_from_entities($matched_entities,$careServicesRequest,$processors as map(xs:string, function(*))) 
 {
+  let $search_name := string($careServicesRequest/@function)
+  let $doc_name := string($careServicesRequest/@resource)
+  let $base_url := string($careServicesRequest/@base_url)
+
   let $entities := osf:limit_matches($matched_entities,$careServicesRequest)
 
   let $func := 
@@ -327,35 +337,38 @@ declare function osf:get_entity_link($entity,$search_name)
 
 
 
-declare function osf:get_atom_search_link($search_name,$careServicesRequest,$rel,$total,$base_url) {
-  if ($rel = 'search') then
-   <atom:link rel="search" href="{osf:get_base_url($search_name,$base_url)}" type="application/atom+xml"/>
-  else 
-   let $start_index := if(functx:is-a-number($careServicesRequest/os:startIndex)) then max(xs:int($careServicesRequest/os:startIndex),1) else 1
-   let $start_page := if(functx:is-a-number($careServicesRequest/os:startPage)) then max(xs:int($careServicesRequest/os:startPage),1) else 1
-   let $records := if(functx:is-a-number($careServicesRequest/os:itemsPerPage)) then  max(xs:int($careServicesRequest/os:itemsPerPage),1) else 50
-   let $url0 := concat(osf:get_base_url($search_name,$base_url),"/search?")
-   let $url1:= if ($careServicesRequest/os:searchTerms) then (concat($url0,"&amp;searchTerms=", $careServicesRequest/os:searchTerms)) else $url0
-   let $url2:= 
-     if ($careServicesRequest/os:startPage and not($rel = ('first','previous','next','last' ))) then
-      concat($url1,"&amp;startPage=", $careServicesRequest/os:startPage)
-     else
-	 if ($rel ='first') then concat($url1,"&amp;startPage=1")
-         else if ($rel ='previous') then if ($start_page > 1) then concat($url1,"&amp;startPage=", $start_page - 1) else  concat($url1,"&amp;startPage=1")
-         else if ($rel ='next') then concat($url1,"&amp;startPage=", $start_page + 1 )
-         else if ($rel ='last') then concat($url1,"&amp;startPage=", ($records div $records) + 1)
-         else concat($url1,"&amp;startPage=", $careServicesRequest/os:startPage)
-   let $url3:= 
-     if (functx:is-a-number($careServicesRequest/os:startIndex)) then
-       if ($rel ='first') then concat($url2,"&amp;startIndex=1")
-       else if ($rel ='previous') then if ($start_index > 1) then concat($url2,"&amp;startIndex=", $start_index - 1) else  ()
-       else if ($rel ='next') then concat($url2,"&amp;startIndex=", $start_index + 1 )
-       else if ($rel ='last') then concat($url2,"&amp;startIndex=", $records )
-       else concat($url2,"&amp;startIndex=", $careServicesRequest/os:startIndex)
-     else $url2
-   let $url4:= if ($careServicesRequest/os:itemsPerPage) then (concat($url3,"&amp;count=", $records)) else $url3
-   let  $url5:= if ($careServicesRequest/format) then (concat($url4,"&amp;format=", $careServicesRequest/format)) else (concat($url4,"&amp;format=html"))
-   return $url5
+declare function osf:get_atom_search_link($careServicesRequest,$rel,$total) {
+  let $base_url := string($careServicesRequest/@base_url)
+  let $search_name := string($careServicesRequest/@function)
+  return
+    if ($rel = 'search') then
+      <atom:link rel="search" href="{osf:get_base_url($search_name,$base_url)}" type="application/atom+xml"/>
+    else 
+      let $start_index := if(functx:is-a-number($careServicesRequest/os:startIndex)) then max(xs:int($careServicesRequest/os:startIndex),1) else 1
+      let $start_page := if(functx:is-a-number($careServicesRequest/os:startPage)) then max(xs:int($careServicesRequest/os:startPage),1) else 1
+      let $records := if(functx:is-a-number($careServicesRequest/os:itemsPerPage)) then  max(xs:int($careServicesRequest/os:itemsPerPage),1) else 50
+      let $url0 := concat(osf:get_base_url($search_name,$base_url),"/search?")
+      let $url1:= if ($careServicesRequest/os:searchTerms) then (concat($url0,"&amp;searchTerms=", $careServicesRequest/os:searchTerms)) else $url0
+      let $url2:= 
+        if ($careServicesRequest/os:startPage and not($rel = ('first','previous','next','last' ))) then
+	  concat($url1,"&amp;startPage=", $careServicesRequest/os:startPage)
+	else
+  	  if ($rel ='first') then concat($url1,"&amp;startPage=1")
+          else if ($rel ='previous') then if ($start_page > 1) then concat($url1,"&amp;startPage=", $start_page - 1) else  concat($url1,"&amp;startPage=1")
+          else if ($rel ='next') then concat($url1,"&amp;startPage=", $start_page + 1 )
+          else if ($rel ='last') then concat($url1,"&amp;startPage=", ($records div $records) + 1)
+          else concat($url1,"&amp;startPage=", $careServicesRequest/os:startPage)
+      let $url3:= 
+         if (functx:is-a-number($careServicesRequest/os:startIndex)) then
+           if ($rel ='first') then concat($url2,"&amp;startIndex=1")
+	   else if ($rel ='previous') then if ($start_index > 1) then concat($url2,"&amp;startIndex=", $start_index - 1) else  ()
+	   else if ($rel ='next') then concat($url2,"&amp;startIndex=", $start_index + 1 )
+ 	   else if ($rel ='last') then concat($url2,"&amp;startIndex=", $records )
+	   else concat($url2,"&amp;startIndex=", $careServicesRequest/os:startIndex)
+	 else $url2
+      let $url4:= if ($careServicesRequest/os:itemsPerPage) then (concat($url3,"&amp;count=", $records)) else $url3
+      let  $url5:= if ($careServicesRequest/format) then (concat($url4,"&amp;format=", $careServicesRequest/format)) else (concat($url4,"&amp;format=html"))
+      return $url5
 };
 
 

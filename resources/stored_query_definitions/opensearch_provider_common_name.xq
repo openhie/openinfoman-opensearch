@@ -8,8 +8,6 @@ declare namespace html = "http://www.w3.org/1999/xhtml";
 declare namespace os  = "http://a9.com/-/spec/opensearch/1.1/";
 
 declare variable $careServicesRequest as item() external;
-declare variable $base_url  external;
-declare variable $doc_name  external;
 
 
 
@@ -19,8 +17,6 @@ declare variable $doc_name  external;
    and limit paramaters as sent by the Service Finder
 :) 
 
-(:Should match the UUID assigned to the care services function.  :)
-let $search_name := "48095e0e-7760-46bc-8798-c4fa857a878c"
 
 (:Get the search terms passed in the request :)
 let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
@@ -34,7 +30,7 @@ let $matched_providers :=
 
 
 (:Produce the feed in the neccesary format :)
-return osf:create_feed_from_entities($matched_providers,$careServicesRequest,$base_url,$search_name,$doc_name)
+return osf:create_feed_from_entities($matched_providers,$careServicesRequest)
 
 
 

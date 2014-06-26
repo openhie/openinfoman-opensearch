@@ -29,7 +29,8 @@ let $matched_providers :=
     for $provider in /csd:CSD/csd:providerDirectory/csd:provider
     let $common_names := $provider/csd:demographic/csd:name/csd:commonName
     where  count(filter($common_names,$filter)) > 0
-  return $provider  
+    return $provider  
+  else ()
 
 
 

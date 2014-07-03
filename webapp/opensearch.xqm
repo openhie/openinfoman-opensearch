@@ -1,11 +1,10 @@
 module namespace page = 'http://basex.org/modules/web-page';
 
 (:Import other namespaces.  :)
-import module namespace csd_webconf =  "https://github.com/his-interop/openinfoman/csd_webconf";
-import module namespace osf = "https://github.com/his-interop/openinfoman/opensearch_feed";
-import module namespace csr_proc = "https://github.com/his-interop/openinfoman/csr_proc";
-(:import module namespace csr_adpt = "https://github.com/his-interop/openinfoman/csr_adapter"; :)
-import module namespace csd_dm = "https://github.com/his-interop/openinfoman/csd_dm";
+import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
+import module namespace osf = "https://github.com/openhie/openinfoman/adapter/opensearch";
+import module namespace csr_proc = "https://github.com/openhie/openinfoman/csr_proc";
+import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
 declare namespace xs = "http://www.w3.org/2001/XMLSchema";
 declare namespace csd = "urn:ihe:iti:csd:2013";
 declare namespace   xforms = "http://www.w3.org/2002/xforms";
@@ -39,13 +38,20 @@ declare
       return 
         for $search_func in csr_proc:stored_functions($csd_webconf:db)[@uuid = $search_name]
 	let $slink:= concat($csd_webconf:baseurl , "CSD/adapter/opensearch/" , $search_func/@uuid, "/" , $doc_name)
-        let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:opensearch_feed']/os:ShortName
+        let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)
 	where osf:is_search_function($search_func/@uuid)
 	return 
           <link rel="search" href="{$slink}"  type="application/opensearchdescription+xml" title="{$title}" />
-   return page:wrapper($searches,$auto_links)
- else ()
+     let $contents := 
+       <div class='container'>
+        {(
+	  <a href="{$csd_webconf:baseurl}CSD/adapter/opensearch">OpenSearch Adapters</a>
+	  ,$searches
+        )}
+      </div>
+   return page:wrapper($contents,$auto_links)
+ else  page:wrapper(<h2>Not an OpenSearch Function</h2>,())
 };
 
 

@@ -410,6 +410,7 @@ declare function osf:get_provider_desc_html($provider,$doc_name) {
    let $csd_doc := csd_dm:open_document($csd_webconf:db,$doc_name) 
    let $demo:= $provider/csd:demographic[1]
    let $addresses :=$demo/csd:address
+   let $emails :=$demo/csd:contactPoint/csd:codedType[@code="EMAIL" and @codingScheme="urn:ihe:iti:csd:2013:contactPoint"]
    let $names := 
      (
        for $name in  $demo/csd:name
@@ -454,6 +455,17 @@ declare function osf:get_provider_desc_html($provider,$doc_name) {
          else ()
   	}
      </html:div>
+     {
+       if (count($emails) > 0)
+       then 
+         <html:div class='email'>
+           <html:h3>Email Contact</html:h3>
+	   <html:ul>
+	     {for $email in $emails return <html:li>{$email/text()}</html:li>}
+	   </html:ul>
+	 </html:div>
+       else ()
+     }
      <html:div class='business_contact'>
        <html:h3>Business Contact</html:h3>
        {

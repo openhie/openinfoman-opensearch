@@ -26,9 +26,15 @@ declare
       <ul>
         {
   	  for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
+	  let $doc_link := concat( $csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name , "/" , $doc_name )
+	  let $search_link := concat($csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name ,  "/"  , $doc_name ,  "/search")
 	  return
-  	  <li>
-	    <a href="{$csd_webconf:baseurl}/CSD/adapter/opensearch/{$search_name}/{$doc_name}">{string($doc_name)}</a>
+  	  <li>	  
+	    <a href="{$doc_link}">{string($doc_name)}</a>
+	    <br/>
+	    <form action="{$search_link}">
+	      <input type='text' name='searchTerms'/><input type='submit' value='Search'/>
+	    </form>
 	  </li>
 	}
       </ul>

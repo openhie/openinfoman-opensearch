@@ -255,6 +255,7 @@ declare function osf:create_html_feed_from_entities($matched_entities,$requestPa
 
 
 declare function osf:html_wrapper($meta,$content) {
+
 <html:html xml:lang="en" lang="en">
    <html:head profile="http://a9.com/-/spec/opensearch/1.1/" >    
 
@@ -264,22 +265,23 @@ declare function osf:html_wrapper($meta,$content) {
     <html:script src="https://code.jquery.com/jquery.js"/>
     <script src="/static/bootstrap/js/bootstrap.min.js"/>
 
-    <html:script src="https://code.jquery.com/jquery.js"/>
-    <html:script src="/static/bootstrap/js/bootstrap.min.js"/>
+
     {$meta}
   </html:head>
   <html:body>  
     <html:div class="navbar navbar-inverse navbar-static-top">
       <html:div class="container">
+	<html:img class='pull-left' height='38px' src='http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png'/>
+
         <html:div class="navbar-header">
-	  <html:img class='pull-left' height='38px' src='http://upload.wikimedia.org/wikipedia/commons/7/74/GeoGebra_icon_geogebra.png'/>
           <html:button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <html:span class="icon-bar"></html:span>
             <html:span class="icon-bar"></html:span>
             <html:span class="icon-bar"></html:span>
           </html:button>
-          <html:a class="navbar-brand" href="/CSD">OpenInfoMan</html:a>
+          <html:a class="navbar-brand" href="/CSD">OpenInfoMan - Interlinked Health Services Discovery</html:a>
         </html:div>
+	<html:img  class='pull-right' src='http://ohie.org/wp-content/uploads/2013/02/openhie-logo.png' style='height:3.5em'/>
       </html:div>
     </html:div>
     <html:div class='wrapper_search'>
@@ -287,6 +289,22 @@ declare function osf:html_wrapper($meta,$content) {
 	{$content}
       </html:div>
     </html:div>
+    <div class="footer">
+      <center>
+      
+
+      </center>
+
+      <div class="container">
+	<div class='row'>
+	  <div class="col-md-12">
+	    <a class='pull-right' href="http://www.youtube.com/watch?v=pBjvkHHuPHc"  style='color:rgb(0,0,0);text-decoration:none'>(tra-la-la)</a>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+
   </html:body>
  </html:html>
 };

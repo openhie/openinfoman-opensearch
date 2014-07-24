@@ -50,14 +50,12 @@ declare
 	return 
           <link rel="search" href="{$slink}"  type="application/opensearchdescription+xml" title="{$title}" />
      let $contents := 
-       <div class='container'>
-        {(
+        (
 	  <a href="{$csd_webconf:baseurl}CSD/adapter/opensearch">OpenSearch Adapters</a>
 	  ,$searches
-        )}
-      </div>
-   return page:wrapper($contents,$auto_links)
- else  page:wrapper(<h2>Not an OpenSearch Function</h2>,())
+        )
+   return csd_webconf:wrapper($contents,$auto_links)
+ else  csd_webconf:wrapper(<h2>Not an OpenSearch Function</h2>)
 };
 
 

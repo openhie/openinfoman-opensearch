@@ -30,7 +30,7 @@ declare function osf:is_search_function($search_name) {
 };
 
 declare function osf:has_feed($search_name,$doc_name) {
-  (osf:is_search_function($search_name) and csd_dm:is_registered($csd_webconf:db ,$doc_name))
+  (osf:is_search_function($search_name) and csd_dm:document_source_exists($csd_webconf:db ,$doc_name))
 };
 
 declare function osf:get_description($search_name,$doc_name) {

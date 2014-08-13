@@ -26,9 +26,15 @@ declare
       <ul>
         {
   	  for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
+	  let $doc_link := concat( $csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name , "/" , $doc_name )
+	  let $search_link := concat($csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name ,  "/"  , $doc_name ,  "/search")
 	  return
-  	  <li>
-	    <a href="{$csd_webconf:baseurl}/CSD/adapter/opensearch/{$search_name}/{$doc_name}">{string($doc_name)}</a>
+  	  <li>	  
+	    <a href="{$doc_link}">{string($doc_name)}</a>
+	    <br/>
+	    <form action="{$search_link}">
+	      <input type='text' name='searchTerms'/><input type='submit' value='Search'/>
+	    </form>
 	  </li>
 	}
       </ul>
@@ -44,14 +50,12 @@ declare
 	return 
           <link rel="search" href="{$slink}"  type="application/opensearchdescription+xml" title="{$title}" />
      let $contents := 
-       <div class='container'>
-        {(
+        (
 	  <a href="{$csd_webconf:baseurl}CSD/adapter/opensearch">OpenSearch Adapters</a>
 	  ,$searches
-        )}
-      </div>
-   return page:wrapper($contents,$auto_links)
- else  page:wrapper(<h2>Not an OpenSearch Function</h2>,())
+        )
+   return csd_webconf:wrapper($contents,$auto_links)
+ else  csd_webconf:wrapper(<h2>Not an OpenSearch Function</h2>)
 };
 
 

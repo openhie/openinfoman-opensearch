@@ -350,7 +350,7 @@ declare function osf:get_entity_link($entity,$search_name)
 {
   let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
   let $function_link := $function/csd:extension[@type='entity_link' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']
-  return concat($function_link,$entity/@oid)
+  return concat($function_link,$entity/@entityID)
 };
 
 
@@ -414,8 +414,8 @@ declare function osf:get_provider_desc($provider,$doc_name) {
       return if (count($parts) > 1) then concat(functx:trim(string-join($parts)) , ". ") else ()
      ,let $bp:= $demo/csd:contactPoint/csd:codedType[@code="BP"and @codingScheme="urn:ihe:iti:csd:2013:contactPoint"]
        return if ($bp) then ("Business Phone: " , $bp/text() , ".") else ()
-     ,for $fac_ref in $provider/csd:facility/@oid
-       let $fac := if ($fac_ref) then $csd_doc/csd:facilityDirectory/csd:facility[@oid = $fac_ref]  else ()
+     ,for $fac_ref in $provider/csd:facility/@entityID
+       let $fac := if ($fac_ref) then $csd_doc/csd:facilityDirectory/csd:facility[@entityID = $fac_ref]  else ()
        return if ($fac) then ("Duty Post: " , $fac/csd:primaryName/text() , ".") else ()
    )
 };
@@ -499,7 +499,7 @@ declare function osf:get_provider_desc_html($provider,$doc_name) {
 	  <html:li>
 	    Duty Post: 
 	    { 
-	      $csd_doc/csd:facilityDirectory/csd:facility[@oid = $fac/@oid]/csd:primaryName/text() 
+	      $csd_doc/csd:facilityDirectory/csd:facility[@entityID = $fac/@entityID]/csd:primaryName/text() 
 	    } 
 	  </html:li>
 	}
@@ -522,7 +522,7 @@ declare function osf:get_provider_atom($provider,$doc_name,$search_name)
      <atom:entry>
        <atom:title>{$demo/csd:name[1]/csd:surname/text()}, {$demo/csd:name[1]/csd:forename/text()}</atom:title>
        <atom:link href="{osf:get_entity_link($provider,$search_name)}"/>
-       <atom:id>urn:oid:{string($provider/@oid)}</atom:id>  
+       <atom:id>{string($provider/@entityID)}</atom:id>  
        <atom:updated>{string($provider/csd:record/@updated)}</atom:updated>
        <atom:content type="text">{osf:get_provider_desc($provider,$doc_name)}</atom:content>
      </atom:entry>

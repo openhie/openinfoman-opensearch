@@ -38,15 +38,14 @@ declare
 	  </li>
 	}
       </ul>
-
     let $auto_links := 
       for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
       return 
-        for $search_func in csr_proc:stored_functions($csd_webconf:db)[@uuid = $search_name]
-	let $slink:= concat($csd_webconf:baseurl , "CSD/adapter/opensearch/" , $search_func/@uuid, "/" , $doc_name)
+        for $search_func in csr_proc:stored_functions($csd_webconf:db)[@urn = $search_name]
+	let $slink:= concat($csd_webconf:baseurl , "CSD/adapter/opensearch/" , $search_func/@urn, "/" , $doc_name)
         let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)
-	where osf:is_search_function($search_func/@uuid)
+	where osf:is_search_function($search_func/@urn)  
 	return 
           <link rel="search" href="{$slink}"  type="application/opensearchdescription+xml" title="{$title}" />
      let $contents := 
@@ -94,7 +93,7 @@ declare
 :)
     return ($response, $description) 
   else 
-    <http:response status="404" message="No OpenSearch  function with registered with uuid  '{$search_name}'.">
+    <http:response status="404" message="No OpenSearch  function with registered with urn  '{$search_name}'.">
       <http:header name="Content-Language" value="en"/>
       <http:header name="Content-Type" value="text/html; charset=utf-8"/>
     </http:response>    
@@ -116,7 +115,7 @@ declare
     (:would be nice to figure out a good way to use the xform:instance :)
     let $care_services_request :=
       <csd:careServicesRequest >
-	<csd:function uuid='{$search_name}'>
+	<csd:function urn='{$search_name}'>
 	  <requestParams>
             <os:searchTerms>{$searchTerms}</os:searchTerms>
 	    <os:startPage>{$startPage}</os:startPage>

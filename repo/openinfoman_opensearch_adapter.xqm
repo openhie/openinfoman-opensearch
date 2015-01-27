@@ -71,7 +71,7 @@ declare function osf:get_description($search_name,$doc_name) {
 
 
 declare function osf:create_feed_from_entities($matched_entities,$requestParams) {
-  osf:create_feed_from_entities($matched_entities,$requestParams,map:new(()))
+  osf:create_feed_from_entities($matched_entities,$requestParams,map{})
 };
 
 declare function osf:create_feed_from_entities($matched_entities,$requestParams,$processors as map(xs:string, function(*))) 

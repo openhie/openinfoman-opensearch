@@ -8,7 +8,7 @@ USERNAME=oi
 BASEX=$OI/bin/basex
 
 
-REPOS=()
+REPOS=("openinfoman_opensearch_adapter.xqm")
 SFS=("stored_query_definitions/opensearch_provider_credential.xml" "stored_query_definitions/opensearch_provider_common_name.xml")
 
 for REPO in ${REPOS[@]}

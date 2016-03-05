@@ -1,3 +1,11 @@
+openinfoman-opensearch (1.1.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.7
+    -9c38ad6 updated map syntax
+    --http://github.com/openhie/openinfoman-opensearch/commmit/9c38ad6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:26:34 +0000
+
 openinfoman-opensearch (1.1.6~trusty) trusty; urgency=medium
 
   * Release Version 1.1.6

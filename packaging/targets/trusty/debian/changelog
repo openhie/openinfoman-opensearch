@@ -1,3 +1,11 @@
+openinfoman-opensearch (1.1.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.9
+    -dff2263 updating bindings
+    --http://github.com/openhie/openinfoman-opensearch/commmit/dff2263
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 14:56:41 +0000
+
 openinfoman-opensearch (1.1.8~trusty) trusty; urgency=medium
 
   * Release Version 1.1.8

@@ -2,6 +2,7 @@ module namespace page = 'http://basex.org/modules/web-page';
 
 (:Import other namespaces.  :)
 import module namespace csd_webconf =  "https://github.com/openhie/openinfoman/csd_webconf";
+import module namespace csd_webui =  "https://github.com/openhie/openinfoman/csd_webui";
 import module namespace osf = "https://github.com/openhie/openinfoman/adapter/opensearch";
 import module namespace csr_proc = "https://github.com/openhie/openinfoman/csr_proc";
 import module namespace csd_dm = "https://github.com/openhie/openinfoman/csd_dm";
@@ -26,8 +27,8 @@ declare
       <ul>
         {
   	  for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
-	  let $doc_link := concat( $csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name , "/" , $doc_name )
-	  let $search_link := concat($csd_webconf:baseurl , "/CSD/adapter/opensearch/" , $search_name ,  "/"  , $doc_name ,  "/search")
+	  let $doc_link := csd_webui:generateURL (( "/CSD/adapter/opensearch/" , $search_name , "/" , $doc_name ))
+	  let $search_link := csd_webui:generateURL( ( "/CSD/adapter/opensearch/" , $search_name ,  "/"  , $doc_name ,  "/search"))
 	  return
   	  <li>	  
 	    <a href="{$doc_link}">{string($doc_name)}</a>
@@ -42,7 +43,7 @@ declare
       for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
       return 
         for $search_func in csr_proc:stored_functions($csd_webconf:db)[@urn = $search_name]
-	let $slink:= concat($csd_webconf:baseurl , "CSD/adapter/opensearch/" , $search_func/@urn, "/" , $doc_name)
+	let $slink:= csd_webui:generateURL(( "CSD/adapter/opensearch/" , $search_func/@urn, "/" , $doc_name))
         let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)
 	where osf:is_search_function($search_func/@urn)  
@@ -50,11 +51,11 @@ declare
           <link rel="search" href="{$slink}"  type="application/opensearchdescription+xml" title="{$title}" />
      let $contents := 
         (
-	  <a href="{$csd_webconf:baseurl}CSD/adapter/opensearch">OpenSearch Adapters</a>
+	  <a href="{csd_webui:generateURL('CSD/adapter/opensearch')}">OpenSearch Adapters</a>
 	  ,$searches
         )
-   return csd_webconf:wrapper($contents,$auto_links)
- else  csd_webconf:wrapper(<h2>Not an OpenSearch Function</h2>)
+   return page:wrapper($contents,$auto_links)
+ else  csd_webui:wrapper(<h2>Not an OpenSearch Function</h2>)
 };
 
 

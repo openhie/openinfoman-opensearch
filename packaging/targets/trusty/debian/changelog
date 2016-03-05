@@ -1,3 +1,11 @@
+openinfoman-opensearch (1.1.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.5
+    -5cd6670 fixed typo
+    --http://github.com/openhie/openinfoman-opensearch/commmit/5cd6670
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:23:47 +0000
+
 openinfoman-opensearch (1.1.4~trusty) trusty; urgency=medium
 
   * Release Version 1.1.4

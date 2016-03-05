@@ -1,40 +1,12 @@
-openinfoman-anon (1.0.5~trusty) trusty; urgency=medium
+openinfoman-opensearch (1.1.1~trusty) trusty; urgency=medium
 
-  * Release Version 1.0.5
+  * Release Version 1.1.1
+    -6de7a77 added packaging
+    --http://github.com/openhie/openinfoman-opensearch/commmit/6de7a77
 
- -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 09:59:00 +0000
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:20:13 +0000
 
-openinfoman-anon (1.0.4~trusty) trusty; urgency=medium
-
-  * Release Version 1.0.4
-    -fda6886 anon email too
-    --https://github.com/openhie/openinfoman-anon/commmit/fda6886
-
- -- Carl Leitner <litlfred@ibiblio.org>  Fri, 17 Apr 2015 16:06:22 -0400
-
-openinfoman-anon (1.0.3~trusty) trusty; urgency=medium
-
-  * Release Version 1.0.3
-    -f2e641e more anonymization on email
-    --https://github.com/openhie/openinfoman-anon/commmit/f2e641e
-
- -- Carl Leitner <litlfred@ibiblio.org>  Fri, 13 Mar 2015 12:32:39 +0000
-
-openinfoman-anon (1.0.2~trusty) trusty; urgency=medium
-
-  * Release Version 1.0.2
-    -1e1b1a5 Update README.md
-    --https://github.com/openhie/openinfoman-anon/commmit/1e1b1a5
-
- -- Carl Leitner <litlfred@ibiblio.org>  Thu, 12 Mar 2015 18:46:39 +0000
-
-openinfoman-anon (1.0.1~trusty) trusty; urgency=medium
-
-  * Release Version 1.0.1
-
- -- Carl Leitner <litlfred@ibiblio.org>  Thu, 12 Mar 2015 18:36:09 +0000
-
-openinfoman-anon (1.0.0~trusty) trusty; urgency=low
+openinfoman-opensearch (1.1.00~trusty) trusty; urgency=low
 
   [Carl Leitner <litlfred@ibiblio.org>]
   * Initial Build

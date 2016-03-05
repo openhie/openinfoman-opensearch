@@ -58,7 +58,7 @@ let $html_func :=  function($provider ,$doc_name,$search_name)
 
 
 let $processors := map{
-  'html' := $html_func
+  'html' : $html_func
 }
 
 

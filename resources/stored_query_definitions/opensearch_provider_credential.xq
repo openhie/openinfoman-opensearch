@@ -19,7 +19,7 @@ declare variable $careServicesRequest as item() external;
 let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
 (:Find the matching providers -- to be customized for your search:)
 let $filter:= function($credential) {
-  functx:contains-case-insensitive($credenital,  $search_terms)  
+  functx:contains-case-insensitive($credential,  $search_terms)  
 }
 let $matched_providers :=  
   if ($search_terms) then

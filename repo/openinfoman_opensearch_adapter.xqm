@@ -22,7 +22,7 @@ declare namespace atom = "http://www.w3.org/2005/Atom";
 declare namespace html = "http://www.w3.org/1999/xhtml";
 
 declare function osf:is_search_function($search_name) {
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $ext_desc := $function//csd:extension[ @type='description' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']
   let $ext_link := $function//csd:extension[ @type='entity_link' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']
 
@@ -30,13 +30,13 @@ declare function osf:is_search_function($search_name) {
 };
 
 declare function osf:has_feed($search_name,$doc_name) {
-  (osf:is_search_function($search_name) and csd_dm:document_source_exists($csd_webconf:db ,$doc_name))
+  (osf:is_search_function($search_name) and csd_dm:document_source_exists($doc_name))
 };
 
 declare function osf:get_description($search_name,$doc_name) {
   let $base_url := osf:get_base_url($search_name)
   let $url_template := concat(osf:get_base_url($search_name),"/", $doc_name, "/search?searchTerms={searchTerms}&amp;startPage={startPage?}&amp;startIndex={startIndex?}&amp;count={count?}")
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $function_desc := $function/csd:extension[@type='description' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']
   let $short_name :=  <os:ShortName>{$function_desc/os:ShortName/text()} on {$doc_name}</os:ShortName>
   let $description :=
@@ -112,7 +112,7 @@ declare function osf:create_rss_feed_from_entities($matched_entities,$requestPar
   let $count := $requestParams/os:itemsPerPage/text()
   let $type := $requestParams/type/text()
   let $link := concat(osf:get_base_url($search_name,$base_url),'/' , $doc_name ,'/search' )
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $title := $function/csd:extension[@type='description' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName/text()
   let $total := count($matched_entities)
   let $os_query :=   
@@ -165,7 +165,7 @@ declare function osf:create_atom_feed_from_entities($matched_entities,$requestPa
   let $count := $requestParams/os:itemsPerPage/text()
   let $type := $requestParams/type/text()
   let $link := concat(osf:get_base_url($search_name,$base_url),'/' , $doc_name ,'/search' )
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $title := $function/csd:extension[@type='description' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName/text()
   let $total := count($matched_entities)
   let $os_query :=   
@@ -218,7 +218,7 @@ declare function osf:create_html_feed_from_entities($matched_entities,$requestPa
     
   let $start_index := $requestParams/os:startIndex/text()
   let $count := $requestParams/os:itemsPerPage/text()
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $title := $function/csd:extension[@type='description' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName/text()
   let $total := count($matched_entities)
 
@@ -348,7 +348,7 @@ declare function osf:get_expires($search_name) {
 
 declare function osf:get_entity_link($entity,$search_name) 
 {
-  let $function := csr_proc:get_function_definition($csd_webconf:db,$search_name)
+  let $function := csr_proc:get_function_definition($search_name)
   let $function_link := $function/csd:extension[@type='entity_link' and @urn='urn:openhie.org:openinfoman:adapter:opensearch']
   return concat($function_link,$entity/@entityID)
 };
@@ -392,7 +392,7 @@ declare function osf:get_atom_search_link($requestParams,$rel,$total) {
 
 
 declare function osf:get_provider_desc($provider,$doc_name) {
-   let $csd_doc := csd_dm:open_document($csd_webconf:db,$doc_name) 
+   let $csd_doc := csd_dm:open_document($doc_name) 
    let $demo:= $provider/csd:demographic[1]
    let $names := 
      (
@@ -425,7 +425,7 @@ declare function osf:get_provider_desc($provider,$doc_name) {
 
 
 declare function osf:get_provider_desc_html($provider,$doc_name) {
-   let $csd_doc := csd_dm:open_document($csd_webconf:db,$doc_name) 
+   let $csd_doc := csd_dm:open_document($doc_name) 
    let $demo:= $provider/csd:demographic[1]
    let $addresses :=$demo/csd:address
    let $emails :=$demo/csd:contactPoint/csd:codedType[@code="EMAIL" and @codingScheme="urn:ihe:iti:csd:2013:contactPoint"]

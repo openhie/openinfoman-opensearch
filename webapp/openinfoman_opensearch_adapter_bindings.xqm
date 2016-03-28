@@ -26,7 +26,7 @@ declare
     let $searches := 
       <ul>
         {
-  	  for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
+  	  for $doc_name in csd_dm:registered_documents()      
 	  let $doc_link := csd_webui:generateURL (( "/CSD/adapter/opensearch/" , $search_name , "/" , $doc_name ))
 	  let $search_link := csd_webui:generateURL( ( "/CSD/adapter/opensearch/" , $search_name ,  "/"  , $doc_name ,  "/search"))
 	  return
@@ -40,9 +40,9 @@ declare
 	}
       </ul>
     let $auto_links := 
-      for $doc_name in csd_dm:registered_documents($csd_webconf:db)      
+      for $doc_name in csd_dm:registered_documents()      
       return 
-        for $search_func in csr_proc:stored_functions($csd_webconf:db)[@urn = $search_name]
+        for $search_func in csr_proc:stored_functions()[@urn = $search_name]
 	let $slink:= csd_webui:generateURL(( "CSD/adapter/opensearch/" , $search_func/@urn, "/" , $doc_name))
         let $short_name := $search_func/csd:extension[@type='description' and  @urn='urn:openhie.org:openinfoman:adapter:opensearch']/os:ShortName
 	let $title := concat($short_name, " : "  ,$doc_name)
@@ -128,7 +128,6 @@ declare
 	</csd:function>
       </csd:careServicesRequest>
      let $results := csr_proc:process_CSR(
-       $csd_webconf:db,
        $care_services_request,
        $doc_name,
        $csd_webconf:baseurl

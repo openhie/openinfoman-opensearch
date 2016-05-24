@@ -16,7 +16,7 @@ declare variable $careServicesRequest as item() external;
 :) 
 
 (:Get the search terms passed in the request :)
-let $search_terms := xs:string($careServicesRequest/os:searchTerms/text())
+let $search_terms := xs:string($careServicesRequest/csd:requestParams/os:searchTerms/text())
 (:Find the matching providers -- to be customized for your search:)
 let $filter:= function($credential) {
   functx:contains-case-insensitive($credential,  $search_terms)  

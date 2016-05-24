@@ -115,17 +115,15 @@ declare
    if (osf:has_feed($search_name,$doc_name)) then
     (:would be nice to figure out a good way to use the xform:instance :)
     let $care_services_request :=
-      <csd:careServicesRequest >
-	<csd:function urn='{$search_name}'>
-	  <requestParams>
-            <os:searchTerms>{$searchTerms}</os:searchTerms>
-	    <os:startPage>{$startPage}</os:startPage>
-	    <os:startIndex>{$startIndex}</os:startIndex>
-	    <os:itemsPerPage>{$count}</os:itemsPerPage>
-	    <type>{$type}</type>
-	    <format>{$format}</format>
-	  </requestParams>
-	</csd:function>
+      <csd:careServicesRequest urn='{$search_name}'>
+	<requestParams>
+          <os:searchTerms>{$searchTerms}</os:searchTerms>
+	  <os:startPage>{$startPage}</os:startPage>
+	  <os:startIndex>{$startIndex}</os:startIndex>
+	  <os:itemsPerPage>{$count}</os:itemsPerPage>
+	  <type>{$type}</type>
+	  <format>{$format}</format>
+	</requestParams>
       </csd:careServicesRequest>
      let $results := csr_proc:process_CSR(
        $care_services_request,

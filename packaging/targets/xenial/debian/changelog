@@ -1,0 +1,86 @@
+openinfoman-opensearch (1.2.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.2
+    -2b8caf9 fixup csd_webconf references
+    --http://github.com/openhie/openinfoman-opensearch/commmit/2b8caf9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 28 Mar 2016 02:01:31 +0000
+
+openinfoman-opensearch (1.2.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.2.1
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sun, 20 Mar 2016 18:39:12 +0000
+
+openinfoman-opensearch (1.1.9~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.9
+    -dff2263 updating bindings
+    --http://github.com/openhie/openinfoman-opensearch/commmit/dff2263
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 14:56:41 +0000
+
+openinfoman-opensearch (1.1.8~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.8
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:57:27 +0000
+
+openinfoman-opensearch (1.1.7~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.7
+    -9c38ad6 updated map syntax
+    --http://github.com/openhie/openinfoman-opensearch/commmit/9c38ad6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:26:34 +0000
+
+openinfoman-opensearch (1.1.6~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.6
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:24:55 +0000
+
+openinfoman-opensearch (1.1.5~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.5
+    -5cd6670 fixed typo
+    --http://github.com/openhie/openinfoman-opensearch/commmit/5cd6670
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:23:47 +0000
+
+openinfoman-opensearch (1.1.4~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.4
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:22:42 +0000
+
+openinfoman-opensearch (1.1.3~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.3
+    -07179a9 removed extra file
+    --http://github.com/openhie/openinfoman-opensearch/commmit/07179a9
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:21:59 +0000
+
+openinfoman-opensearch (1.1.2~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.2
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:20:54 +0000
+
+openinfoman-opensearch (1.1.1~trusty) trusty; urgency=medium
+
+  * Release Version 1.1.1
+    -6de7a77 added packaging
+    --http://github.com/openhie/openinfoman-opensearch/commmit/6de7a77
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 05 Mar 2016 10:20:13 +0000
+
+openinfoman-opensearch (1.1.00~trusty) trusty; urgency=low
+
+  [Carl Leitner <litlfred@ibiblio.org>]
+  * Initial Build
+    Fri 2015-02-13 13:55:10 -0500
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Mon, 16 February 2015 13:55:10 -0500
+

@@ -1,3 +1,11 @@
+openinfoman-opensearch (1.2.3~xenial) xenial; urgency=medium
+
+  * Release Version 1.2.3
+    -a57ff6e packaging for ubuntu 16.04
+    --https://github.com/openhie/openinfoman-opensearch/commmit/a57ff6e
+
+ -- Carl Leitner <litlfred@ibiblio.org>  Sat, 14 Apr 2018 08:23:14 +0000
+
 openinfoman-opensearch (1.2.2~trusty) trusty; urgency=medium
 
   * Release Version 1.2.2

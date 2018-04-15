@@ -1,0 +1,16 @@
+Source: openinfoman-opensearch
+Maintainer: Carl Leitner <litlfred@ibiblio.org>
+Section: web
+Priority: optional
+Standards-Version: 3.9.1
+Build-Depends: debhelper (>= 7)
+Homepage: https://github.com/openhie/openinfoman-opensearchn
+
+
+Package: openinfoman-opensearch
+Architecture: all
+Depends: openinfoman (>= 1.1)
+Recommends: 
+Description: OpenInfoMan OpenSearch
+
+
